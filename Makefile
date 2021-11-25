@@ -1,8 +1,4 @@
-EXECUTABLE = macdict
-
-objc: $(EXECUTABLE).m
-	@xcrun clang -fobjc-arc -o $(EXECUTABLE) -framework CoreServices -framework Foundation $< \
-		&& chmod +x $(EXECUTABLE)
+EXECUTABLE = dict
 
 swift: $(EXECUTABLE).swift $(EXECUTABLE).swift.h
 	@xcrun swiftc -sdk $(shell xcrun --show-sdk-path --sdk macosx) -o $(EXECUTABLE) \

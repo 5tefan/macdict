@@ -26,4 +26,6 @@ extern CFStringRef DCSRecordGetRawHeadword(CFTypeRef record);
 extern CFStringRef DCSRecordGetString(CFTypeRef record);
 extern CFStringRef DCSRecordGetTitle(CFTypeRef record);
 
+extern CFStringRef DCSDictionaryGetStyleSheetURL(DCSDictionaryRef dictionary);
+
 #endif

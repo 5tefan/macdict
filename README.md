@@ -1,100 +1,63 @@
-macdict
-=======
+# macdict
 
-A simple tool for debugging your dictionaries on MacOS?
+Command line interface for built-in offline macOS dictionary (the dictionary used by Dictionary.app).
 
-Installation
-------------
+## Installation
 
-```
-make
-```
+1. Run `make`.
+2. (Optional) Put the resulting `dict` executable on your `$PATH`.
 
-Usage
------
-
-`macdict [-h] [-l] [-d <dictionary name>]... [-i <dictionary indexes>]... [word]...`
-
-### Option: `-h`
-
-Show help information and exit.
-
-### Option: `-l`
-
-Show a list of names of all available dictionaries with indexes.
-
-### Option: `-d <dictionary>`
-
-`dictionary` is the name of the dictionary.
-
-If `dictionary` is `all`, then macdict2 will search all available dictionaries and show all the definitions of the word or phrase.
-
-If no dictionary is specified, macdict2 will search all system built-in dictionaries and show the first definition found.
-
-### Option: `-i <index>`
-
-`index` is indexes of the dictionary delimited with commas `,`. If indexes contain `0` then all available dictionaries are selected.
-
-This option is only recommended for a temporary use.
-
-### Option: `-r`
-
-Show data in the XML format. This option only works in company with `-d` and `-i`.
-
-Examples
---------
+## Usage
 
 ```
-$ macdict Quod Erat Demonstrandum
-Definitions of <Quod Erat Demonstrandum>
-quod erat demonstrandum |kwɒd ˌɛrat dɛmənˈstrandʊm | (abbrev.: QED) ▶exclamation used to convey that a fact or situation demonstrates the truth of one's theory or claim, especially to mark the conclusion of a formal proof. ORIGIN Latin, literally ‘which was to be demonstrated’.
+./dict [word]
 ```
 
-```
-$ macdict -d all Quod Erat Demonstrandum
-Definitions of <Quod> in {Prisma woordenboek Nederlands}
+Result printed to standard output:
 
-quod |kwot| < Latijnvoornaamwoordwat, hetgeen~ erat demonstrandumhetgeen bewezen moest worden~ nonwat niet het geval is: als ik een nieuwe baan zou willen - ~ non - dan zou het iets in het onderwijs zijn~ licetwat toegestaan, geoorloofd is
-%
-Definitions of <Quod Erat Demonstrandum> in {スーパー大辞林}
+```text
+hel·lo | həˈlō, heˈlō | (also hallo or mainly British hullo) 
 
-Q.E.D.〖ラテン quod erat demonstrandum 〗「（このように）証明されるべきであったところの」の意。また，数学や物理で，「よって証明された」の意。
-%
-Definitions of <Quod Erat Demonstrandum> in {Oxford Dictionary of English}
+exclamation: used as a greeting or to begin a phone conversation: hello there, Katie! • British used to express surprise: hello, what's all this then? • used as a cry to attract someone's attention: “Hello below!” he cried. • expressing sarcasm or anger: Hello! Did you even get what the play was about? 
 
-quod erat demonstrandum |kwɒd ˌɛrat dɛmənˈstrandʊm | (abbrev.: QED) ▶exclamation used to convey that a fact or situation demonstrates the truth of one's theory or claim, especially to mark the conclusion of a formal proof. ORIGIN Latin, literally ‘which was to be demonstrated’.
-%
-Definitions of <Quod Erat Demonstrandum> in {New Oxford American Dictionary}
+noun: (plural hellos) an utterance of “hello”; a greeting: she was getting polite nods and hellos from people. 
 
-quod erat demonstrandum |kwäd ˈerət ˌdemənˈsträndəm | (abbr.: QED) ▶noun used to convey that a fact or situation demonstrates the truth of one's theory or claim, esp. to mark the conclusion of a formal proof. ORIGIN Latin, literally ‘which was to be demonstrated.’
-%
-Definitions of <Quod Erat Demonstrandum> in {New Ace English-Korean Dictionary and New Ace Korean-English Dictionary}
-
-quod erat demonstrandum |kwɔ̀ːd érɑːt dèmənstrǽndəm, dèimɔːnstrɑ́ːndum|｛라틴어｝그 일은 증명되었어야 마땅했다.약어 Q.E.D.
+verb: (helloes, helloing, helloed) [no object] say or shout “hello”; greet someone: I pressed the phone button and helloed. ORIGIN early 19th century: variant of earlier hollo; related to holla. 
 ```
 
-```
-macdict -d 'New Oxford American Dictionary' Quod Erat Demonstrandum
-Definitions of <Quod Erat Demonstrandum> in {New Oxford American Dictionary}
+## Notes
 
-quod erat demonstrandum |kwäd ˈerət ˌdemənˈsträndəm | (abbr.: QED) ▶noun used to convey that a fact or situation demonstrates the truth of one's theory or claim, esp. to mark the conclusion of a formal proof. ORIGIN Latin, literally ‘which was to be demonstrated.’
-```
+Fun fact: when you read a dictionary entry on the macOS Dictionary.app, you're looking at rendered
+HTML! It's just HTML and CSS styling under the hood!
 
-```
-macdict -l                                                         
-[1] Prisma woordenboek Nederlands
-[2] スーパー大辞林
-[3] Oxford Dictionary of English
-[4] New Ace Korean Language Dictionary
-[5] Oxford American Writer's Thesaurus
-[6] New Oxford American Dictionary
-[7] Multidictionnaire de la langue française
-[8] New Ace English-Korean Dictionary and New Ace Korean-English Dictionary
-[9] Diccionario General de la Lengua Española Vox
-[10] ウィズダム英和辞典 / ウィズダム和英辞典
-[11] 維基百科
-[12] Oxford Thesaurus of English
-[13] Oxford Chinese Dictionary
-[14] Dizionario italiano da un affiliato di Oxford University Press
-[15] Apple 辭典
-```
+A rough edge: `dict.swift` is hardcoded to look at the "New Oxford American Dictionary". If that's
+not available, or not the one you want, consider using the `listDictionaries` function to see what
+else is available. I think you could also view the names in Dictionary.app Preferences.
+
+Here are some interesting resources gathered along the way from researching what exists to having
+something functional.
+
+1. The more widely known `dict` command to query a dictd server for word definitions is cool, but
+   requires either an internet connection or hosting your own dictd server.
+2. In terms of offline dictionaries, `sdcv` (StarDict Console Version) seems to be the best option.
+   Here's a setup guide: https://askubuntu.com/a/191268 but it's ominous that the offline
+   dictionaries have to be downloaded from the depths of the Internet Archive!
+   Also note: because of SIP on recent versions of macOS, you cannot install the dictionaries in
+   the defualt location `sdcv` expects. Instead you will have to 
+   `export STARDICT_DATA_DIR=/usr/local/share/stardict/` and unpack the dictionaries under
+   `/usr/local/share/stardict/dic`.
+3. One solution would have been to reverse engineer the built-in Apple dictionaries used in
+   Dictionary.app. Luckily someone has looked into this before... it doesn't look easy!
+   https://josephg.com/blog/reverse-engineering-apple-dictionaries/
+4. This incredible article: https://nshipster.com/dictionary-services/ /
+   https://github.com/NSHipster/articles/blob/master/2014-03-10-dictionary-services.md
+   highlighted that there are some private APIs available from Core Services that are used to
+   implement Dictionary.app (dumpy the symbol table for the dictionary executable 
+   `nm /System/Applications/Dictionary.app/Contents/MacOS` to see! Things like `DCSRecordCopyData`
+   should come up.). With inspiration from https://github.com/jakwings/macdict and a lot of 
+   trial and error, I've arrived at the current, not incredibly elegant, but functional enough
+   solution.
+5. Yes, this is my first experience with Swift. No, I was not super impressed.
+   
+Enjoy offline definitions in your terminal!
+
